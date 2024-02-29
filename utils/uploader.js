@@ -1,7 +1,7 @@
 const multer = require('multer');
 
 const fileUploadLimits = {
-  fileSize: 5 * 1024 * 1024, // 5 MB
+  fileSize: 5 * 1024 * 1024,
 };
 
 const fileFilter = (req, file, cb) => {
@@ -38,5 +38,4 @@ const productUploadSettings = multer({
 const blogUpload = blogsUploadSettings.single('blogImage');
 const productUpload = productUploadSettings.single('productImage');
 
-// Exporting both upload functions
 module.exports = { blogUpload, productUpload };
