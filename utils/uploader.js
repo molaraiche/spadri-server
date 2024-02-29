@@ -1,7 +1,7 @@
 const multer = require('multer');
 
 const fileUploadLimits = {
-  fileSize: 5 * 1024 * 1024,
+  fileSize: 5 * 1024 * 1024, // 5 MB
 };
 
 const fileFilter = (req, file, cb) => {
@@ -14,13 +14,13 @@ const fileFilter = (req, file, cb) => {
 };
 
 const blogsStorage = multer.diskStorage({
-  destination: (err, file, cb) => cb(null, 'public/upload/blogs'),
-  filename: (err, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+  destination: (req, file, cb) => cb(null, 'public/upload/blogs'),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 
 const productsStorage = multer.diskStorage({
-  destination: (err, file, cb) => cb(null, 'public/upload/products'),
-  filename: (err, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+  destination: (req, file, cb) => cb(null, 'public/upload/products'),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 
 const blogsUploadSettings = multer({
@@ -34,8 +34,9 @@ const productUploadSettings = multer({
   limits: fileUploadLimits,
   fileFilter: fileFilter,
 });
+
 const blogUpload = blogsUploadSettings.single('blogImage');
 const productUpload = productUploadSettings.single('productImage');
 
-module.exports = blogUpload;
-module.exports = productUpload;
+// Exporting both upload functions
+module.exports = { blogUpload, productUpload };

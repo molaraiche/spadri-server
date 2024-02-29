@@ -4,7 +4,7 @@ const {
   updatedProduct,
   deleteProduct,
 } = require('../controller/products_controller');
-const productUpload = require('../utils/uploader');
+const { productUpload } = require('../utils/uploader');
 
 const router = require('express').Router();
 

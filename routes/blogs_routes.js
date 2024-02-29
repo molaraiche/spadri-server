@@ -6,7 +6,7 @@ const {
   updateBlog,
   deleteBlog,
 } = require('../controller/blog_controller');
-const blogUpload = require('../utils/uploader');
+const { blogUpload } = require('../utils/uploader');
 
 router.get('/', getAllBlogs);
 router.post('/newBlog', blogUpload, createBlog);
