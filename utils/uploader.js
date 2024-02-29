@@ -38,3 +38,4 @@ const blogUpload = blogsUploadSettings.single('blogImage');
 const productUpload = productUploadSettings.single('productImage');
 
 module.exports = blogUpload;
+module.exports = productUpload;
