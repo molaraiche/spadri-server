@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const MongoDB_URL = process.envMONGO_URI;
 const connectSpadri = async () => {
   try {
     await mongoose.connect(

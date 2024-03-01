@@ -2,13 +2,13 @@ const Users = require('../model/users_model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
-const SECRET = process.env.SECRET_KEY;
+const SECRET = `${process.env.SECRET_KEY}`;
 
 const createToken = (id) => {
   return jwt.sign({ id }, SECRET, { expiresIn: '1d' });
 };
 
-const signup = async (req, res) => {
+const adminSignUp = async (req, res) => {
   try {
     const { email, password } = req.body;
     const HashedPassword = bcrypt.hashSync(password, 12);
@@ -24,7 +24,7 @@ const signup = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -45,4 +45,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signup, login };
+module.exports = { adminSignUp, adminLogin };
