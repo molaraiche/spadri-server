@@ -12,13 +12,18 @@ const adminSignUp = async (req, res) => {
   try {
     const { email, password } = req.body;
     const HashedPassword = bcrypt.hashSync(password, 12);
-
-    const newUser = await Users.create({
-      email,
-      password: HashedPassword,
-    });
-    const token = createToken(newUser._id);
-    res.status(201).json({ message: 'Sign up !', newUser, token: token });
+    if (!email || !password) {
+      res.status(400).json({
+        fillTheFields: 'Please fill all the fields !',
+      });
+    } else {
+      const newUser = await Users.create({
+        email,
+        password: HashedPassword,
+      });
+      const token = createToken(newUser._id);
+      res.status(201).json({ message: 'Sign up !', newUser, token: token });
+    }
   } catch (error) {
     res.status(500).json({ problemInCreationAccount: error.message });
   }
@@ -28,17 +33,24 @@ const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const existUser = await Users.findOne({ email });
-    const matchedPassword = bcrypt.compareSync(password, existUser.password);
-    if (matchedPassword) {
-      const token = createToken(existUser._id);
-
-      res.status(200).json({ message: 'Login !!', token });
-    } else {
-      res.json({
-        message:
-          'user Does not exist or password is incorrect ! Please try check your credential informations! ',
+    if (!email || !password) {
+      res.status(400).json({
+        fillTheFields: 'Please fill all the fields !',
       });
+    } else {
+      const existUser = await Users.findOne({ email });
+      const matchedPassword = bcrypt.compareSync(password, existUser.password);
+
+      if (matchedPassword) {
+        const token = createToken(existUser._id);
+
+        res.status(200).json({ message: 'Login !!', token });
+      } else {
+        res.json({
+          message:
+            'user Does not exist or password is incorrect ! Please try check your credential informations! ',
+        });
+      }
     }
   } catch (error) {
     res.status(500).json({ problemInCreationAccount: error.message });

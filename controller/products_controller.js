@@ -14,15 +14,29 @@ const createProduct = async (req, res) => {
   try {
     const { name, description, quantity, price, path } = req.body;
     const productImage = req.file.filename;
-    const createNewProduct = await new Products({
-      name,
-      description,
-      quantity,
-      price,
-      productImage,
-    });
-    createNewProduct.save();
-    res.status(201).json({ response: createNewProduct });
+    if (
+      !name ||
+      !description ||
+      !quantity ||
+      !price ||
+      !path ||
+      !productImage
+    ) {
+      res.status(400).json({
+        fillTheFields: 'Please fill all the fields !',
+      });
+    } else {
+      const createNewProduct = await new Products({
+        name,
+        description,
+        quantity,
+        price,
+        productImage,
+        path,
+      });
+      createNewProduct.save();
+      res.status(201).json({ response: createNewProduct });
+    }
   } catch (error) {
     res.status(500).json({ errorInGetProducts: error.message });
   }
@@ -33,15 +47,29 @@ const updatedProduct = async (req, res) => {
     const { name, description, quantity, price, path } = req.body;
     const id = req.params.id;
     const productImage = req.file.filename;
-    const updatedProduct = await Products.findByIdAndUpdate(id, {
-      name,
-      description,
-      quantity,
-      price,
-      productImage,
-    });
+    if (
+      !name ||
+      !description ||
+      !quantity ||
+      !price ||
+      !path ||
+      !productImage
+    ) {
+      res.status(400).json({
+        fillTheFields: 'Please fill all the fields !',
+      });
+    } else {
+      const updatedProduct = await Products.findByIdAndUpdate(id, {
+        name,
+        description,
+        quantity,
+        price,
+        productImage,
+        path,
+      });
 
-    res.status(200).json({ response: updatedProduct });
+      res.status(200).json({ response: updatedProduct });
+    }
   } catch (error) {
     res.status(500).json({ errorInGetProducts: error.message });
   }

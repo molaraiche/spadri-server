@@ -16,9 +16,9 @@ const createBlog = async (req, res) => {
     const blogImage = req.file.filename;
 
     if (!title || !description || !blogImage) {
-      res
-        .status(400)
-        .json({ fillTheFields: 'title,description or Image are not valid.' });
+      res.status(400).json({
+        fillTheFields: 'Please fill all the fields !',
+      });
     } else {
       const newBlogCreation = await new Blogs({
         title,
@@ -38,9 +38,9 @@ const updateBlog = async (req, res) => {
     const blogImage = req.file.filename;
     const id = req.params.id;
     if (!title || !description || !blogImage) {
-      res
-        .status(400)
-        .json({ fillTheFields: 'title,description or Image are not valid.' });
+      res.status(400).json({
+        fillTheFields: 'Please fill all the fields !',
+      });
     } else {
       const updatedBlog = await Blogs.findByIdAndUpdate(id, {
         title,
