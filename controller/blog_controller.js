@@ -1,4 +1,5 @@
 const Blogs = require('../model/blogs_model');
+const validator = require('validator');
 
 const getAllBlogs = async (req, res) => {
   try {
@@ -14,13 +15,19 @@ const createBlog = async (req, res) => {
     const { title, description } = req.body;
     const blogImage = req.file.filename;
 
-    const newBlogCreation = await new Blogs({
-      title,
-      description,
-      blogImage,
-    });
-    newBlogCreation.save();
-    res.status(201).json({ response: newBlogCreation });
+    if (!title || !description || !blogImage) {
+      res
+        .status(400)
+        .json({ fillTheFields: 'title,description or Image are not valid.' });
+    } else {
+      const newBlogCreation = await new Blogs({
+        title,
+        description,
+        blogImage,
+      });
+      newBlogCreation.save();
+      res.status(201).json({ response: newBlogCreation });
+    }
   } catch (error) {
     res.status(500).json({ createBlogsError: error.message });
   }
@@ -30,12 +37,18 @@ const updateBlog = async (req, res) => {
     const { title, description } = req.body;
     const blogImage = req.file.filename;
     const id = req.params.id;
-    const updatedBlog = await Blogs.findByIdAndUpdate(id, {
-      title,
-      description,
-      blogImage,
-    });
-    res.status(200).json({ response: updatedBlog });
+    if (!title || !description || !blogImage) {
+      res
+        .status(400)
+        .json({ fillTheFields: 'title,description or Image are not valid.' });
+    } else {
+      const updatedBlog = await Blogs.findByIdAndUpdate(id, {
+        title,
+        description,
+        blogImage,
+      });
+      res.status(200).json({ response: updatedBlog });
+    }
   } catch (error) {
     res.status(500).json({ createBlogsError: error.message });
   }
