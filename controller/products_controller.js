@@ -9,11 +9,10 @@ const getAllProducts = async (req, res) => {
     res.status(500).json({ errorInGetProducts: error.message });
   }
 };
-
 const createProduct = async (req, res) => {
   try {
     const { name, description, quantity, price, path } = req.body;
-    const productImage = req.file.filename;
+    const productImage = req.file ? req.file.path : null; // Use Cloudinary URL
     if (
       !name ||
       !description ||
@@ -22,56 +21,63 @@ const createProduct = async (req, res) => {
       !path ||
       !productImage
     ) {
-      res.status(400).json({
-        fillTheFields: 'Please fill all the fields !',
+      return res.status(400).json({
+        message: 'Please fill all the fields and upload an image!',
       });
-    } else {
-      const createNewProduct = await new Products({
-        name,
-        description,
-        quantity,
-        price,
-        productImage,
-        path,
-      });
-      createNewProduct.save();
-      res.status(201).json({ response: createNewProduct });
     }
+
+    const createNewProduct = new Products({
+      name,
+      description,
+      quantity,
+      price,
+      productImage, // This is now the URL from Cloudinary
+      path,
+    });
+
+    await createNewProduct.save();
+    res.status(201).json({ product: createNewProduct });
   } catch (error) {
-    res.status(500).json({ errorInGetProducts: error.message });
+    res.status(500).json({ errorMessage: error.message });
   }
 };
-
 const updatedProduct = async (req, res) => {
   try {
     const { name, description, quantity, price, path } = req.body;
     const id = req.params.id;
-    const productImage = req.file.filename;
+    const updateFields = {
+      name,
+      description,
+      quantity,
+      price,
+      path,
+    };
+
+    // If an image was uploaded, update the productImage field
+    if (req.file && req.file.path) {
+      updateFields.productImage = req.file.path; // Use Cloudinary URL
+    }
+
     if (
       !name ||
       !description ||
       !quantity ||
       !price ||
       !path ||
-      !productImage
+      !(req.file && req.file.path)
     ) {
-      res.status(400).json({
-        fillTheFields: 'Please fill all the fields !',
+      return res.status(400).json({
+        message: 'Please fill all the fields and upload an image!',
       });
-    } else {
-      const updatedProduct = await Products.findByIdAndUpdate(id, {
-        name,
-        description,
-        quantity,
-        price,
-        productImage,
-        path,
-      });
-
-      res.status(200).json({ response: updatedProduct });
     }
+
+    const updatedProduct = await Products.findByIdAndUpdate(id, updateFields, {
+      new: true,
+    });
+
+    res.status(200).json({ product: updatedProduct });
   } catch (error) {
-    res.status(500).json({ errorInGetProducts: error.message });
+    res.status(500).json({ errorMessage: error.message });
   }
 };
 const deleteProduct = async (req, res) => {
