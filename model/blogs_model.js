@@ -13,6 +13,10 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  path: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Blogs', blogSchema);

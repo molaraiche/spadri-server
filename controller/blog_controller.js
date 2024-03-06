@@ -12,7 +12,7 @@ const getAllBlogs = async (req, res) => {
 
 const createBlog = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, path } = req.body;
     const blogImage = req.file ? req.file.path : null; // Use Cloudinary URL
 
     if (!title || !description || !blogImage) {
@@ -24,6 +24,7 @@ const createBlog = async (req, res) => {
         title,
         description,
         blogImage,
+        path,
       });
       newBlogCreation.save();
       res.status(201).json({ response: newBlogCreation });
@@ -34,7 +35,7 @@ const createBlog = async (req, res) => {
 };
 const updateBlog = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, path } = req.body;
     const blogImage = req.file ? req.file.path : null; // Use Cloudinary URL.file.filename;
     const id = req.params.id;
     if (!title || !description || !blogImage) {
@@ -46,6 +47,7 @@ const updateBlog = async (req, res) => {
         title,
         description,
         blogImage,
+        path,
       });
       res.status(200).json({ response: updatedBlog });
     }
