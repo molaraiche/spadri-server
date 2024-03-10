@@ -90,9 +90,23 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const getProduct = async (req, res) => {
+  try {
+    const productPath = req.params.path;
+    const product = await Products.findOne({ path: productPath });
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
 module.exports = {
   getAllProducts,
   createProduct,
   updatedProduct,
   deleteProduct,
+  getProduct,
 };
